@@ -1,10 +1,9 @@
-FROM golang:1.22.1 as builder
-
+FROM golang:1.23 as builder
 WORKDIR /go/src/app
 COPY . .
 ARG TARGETARCH
-RUN make build
-
+ARG TARGETOS
+RUN GOARCH=${TARGETARCH} GOOS=${TARGETOS} make build
 FROM scratch
 WORKDIR /
 COPY --from=builder /go/src/app/kbot .
